@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "blockchain-lite"
+dynamic = ["version"]
+description = "Educational from-scratch blockchain ledger & digital wallet (COEP Mini Project 5). Not for real assets."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "COEP Technological University" }
+]
+keywords = [
+    "blockchain",
+    "sha256",
+    "rsa",
+    "merkle-tree",
+    "proof-of-work",
+    "utxo",
+    "digital-wallet",
+    "cryptography"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Topic :: Security :: Cryptography",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = []
+
+[project.scripts]
+blockchain-lite-demo = "blockchain_lite.cli.demo:main"
+blockchain-lite-dashboard = "blockchain_lite.network.web_dashboard:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["blockchain_lite*"]
+
+[tool.setuptools.dynamic]
+version = { attr = "blockchain_lite.__version__" }
+
+# Dev-only (CI): coverage is never imported by the package.
+[tool.coverage.run]
+branch = true
+source = ["blockchain_lite"]
+
+[tool.coverage.report]
+# Measured 2026-10-15: 86.54% combined (lines 89.66%, branches 74.94%), 101 tests.
+# Ratchet: raise this when coverage rises; never lower it.
+fail_under = 86
+show_missing = true
+skip_empty = true
+
+# Dev-only (CI) linters; never imported by the package.
+[tool.ruff]
+target-version = "py311"
+extend-exclude = ["blockchain_lite_complete.py", "scratch"]
+
+[tool.mypy]
+python_version = "3.11"
+files = ["blockchain_lite"]
+ignore_missing_imports = true
+warn_unused_ignores = true
