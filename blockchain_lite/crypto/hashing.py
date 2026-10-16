@@ -261,7 +261,7 @@ class BitLevelSHA256(HashInterface):
         diff_bits = abs(len(bytes_a) - len(bytes_b)) * 8
         for i in range(min_len):
             xor_byte = bytes_a[i] ^ bytes_b[i]
-            diff_bits += xor_byte.bit_count()
+            diff_bits += xor_byte.bit_count() if hasattr(xor_byte, "bit_count") else bin(xor_byte).count("1")
         return diff_bits
 
     def analyze_avalanche(self, original: bytes, modified: bytes) -> AvalancheReport:
