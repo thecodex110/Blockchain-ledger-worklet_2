@@ -1,0 +1,35 @@
+# Blockchain-Lite (educational demo).
+#   docker compose up --build                         # dashboard on http://127.0.0.1:8080
+#   docker compose --profile demo run --rm cli-demo   # 6-stage CLI demonstration
+#   docker compose --profile test run --rm test-suite # full automated test-suite
+#
+# No volume: the dashboard keeps its demo chain in memory and never persists it.
+
+services:
+  web-dashboard:
+    build: .
+    image: blockchain-lite:local
+    container_name: blockchain-lite-dashboard
+    restart: unless-stopped
+    environment:
+      # Bind all interfaces INSIDE the container so the port can be published...
+      BLOCKCHAIN_LITE_HOST: "0.0.0.0"
+    ports:
+      # ...but publish it on the host's loopback only (demo wallet keys are server-side).
+      - "127.0.0.1:8080:8080"
+
+  cli-demo:
+    image: blockchain-lite:local
+    build: .
+    profiles: ["demo"]
+    command: ["-m", "blockchain_lite.cli.demo"]
+    healthcheck:
+      disable: true
+
+  test-suite:
+    image: blockchain-lite:local
+    build: .
+    profiles: ["test"]
+    command: ["run_tests.py"]
+    healthcheck:
+      disable: true
